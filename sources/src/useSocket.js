@@ -2,13 +2,12 @@ import { useCallback, useEffect, useState } from 'react'
 
 export function useSocket(port)
 {
-    const [ connected, setConnected ] = useState(false)
-    const [ error, setError ] = useState(null)
+    const [ status, setStatus ] = useState('notConnected')
     const [ ws, setWs ] = useState(null)
 
     useEffect(() =>
     {
-        setConnected(false)
+        setStatus('notConnected')
         setWs(new WebSocket('wss://192.168.1.33:' + port, 'vite-hmr'))
     }, [ port ])
 
@@ -19,20 +18,17 @@ export function useSocket(port)
 
         const open = () =>
         {
-            console.log('open')
-            setConnected(true)
+            setStatus('connected')
         }
 
         const error = () =>
         {
-            console.log('error')
-            setError(true)
+            setStatus('error')
         }
 
         const close = () =>
         {
-            console.log('close')
-            setConnected(false)
+            setStatus('notConnected')
         }
 
         ws.addEventListener('open', open)
@@ -50,9 +46,9 @@ export function useSocket(port)
 
     const send = (data) =>
     {
-        if(!connected)
+        if(status !== 'connected')
             return
-            
+
         const message = {
             type: 'remote',
             ...data
@@ -60,5 +56,5 @@ export function useSocket(port)
         ws.send(JSON.stringify(message))
     }
 
-    return { connected, error, send }
+    return { status, send }
 }
