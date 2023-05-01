@@ -4,7 +4,8 @@ import { DebounceInput } from 'react-debounce-input'
 
 function App()
 {
-    const { connected, send } = useSocket()
+    const [ port, setPort ] = useState(2011)
+    const { connected, error, send } = useSocket(port)
     const [ logsCategories, setLogsCategories ] = useState([ 'lifeCourse', 'arcaneSpell', 'divineSpell', 'defaultSpell', 'action', '', ])
     const [ messageText, setMessageText ] = useState('')
 
@@ -35,111 +36,152 @@ function App()
         send({ action: 'messageText', values: [ messageText ] })
     }, [ messageText ])
 
-    if(!connected)
-        return <h1>Chat Arena - Remote</h1>
-
     return (
         <>
             <h1>Chat Arena - Remote</h1>
-            <div className="card">
-                <h2>Main actions</h2>
-                <button onClick={ () => send({ action: 'killAll' }) }>Kill all</button>
-                <button onClick={ () => send({ action: 'resurrectAll' }) }>Resurrect all</button>
-                <button onClick={ () => send({ action: 'healAll' }) }>Heal all</button>
-                <button onClick={ () => send({ action: 'hitAll' }) }>Hit all</button>
-                <button onClick={ () => send({ action: 'relocateAll' }) }>Relocate all</button>
-                <button onClick={ () => send({ action: 'reload' }) }>Reload</button>
-                <h2>Tweaks</h2>
-                <div>
-                    View angle
-                    <br />
-                    <DebounceInput value="1.35" min="0" max={Math.PI * 0.5} step="0.01" type="range" onChange={ (event) => send({ action: 'viewAngle', values: [ parseFloat(event.target.value) ] }) } />
-                </div>
-                <div>
-                    Canvas opacity
-                    <br />
-                    <DebounceInput value="1" min="0" max="1" step="0.01" type="range" onChange={ (event) => send({ action: 'canvasOpacity', values: [ parseFloat(event.target.value) ] }) } />
-                </div>
-                <div>
-                    <h2>Logs</h2>
-                    <button onClick={ () => send({ action: 'logsClear' }) }>Clear</button>
-                    <br />
-                    <label>
-                        <input
-                            type="checkbox"
-                            checked={ logsCategories.includes('lifeCourse') }
-                            onChange={ () => logsCategoriesToggle('lifeCourse') }
-                        />
-                        lifeCourse
-                    </label>
-                    <label>
-                        <input
-                            type="checkbox"
-                            checked={ logsCategories.includes('arcaneSpell') }
-                            onChange={ () => logsCategoriesToggle('arcaneSpell') }
-                        />
-                        arcaneSpell
-                    </label>
-                    <label>
-                        <input
-                            type="checkbox"
-                            checked={ logsCategories.includes('divineSpell') }
-                            onChange={ () => logsCategoriesToggle('divineSpell') }
-                        />
-                        divineSpell
-                    </label>
-                    <label>
-                        <input
-                            type="checkbox"
-                            checked={ logsCategories.includes('defaultSpell') }
-                            onChange={ () => logsCategoriesToggle('defaultSpell') }
-                        />
-                        defaultSpell
-                    </label>
-                    <label>
-                        <input
-                            type="checkbox"
-                            checked={ logsCategories.includes('action') }
-                            onChange={ () => logsCategoriesToggle('action') }
-                        />
-                        action
-                    </label>
-                    <label>
-                        <input
-                            type="checkbox"
-                            checked={ logsCategories.includes('') }
-                            onChange={ () => logsCategoriesToggle('') }
-                        />
-                        none
-                    </label>
-                </div>
-                <div>
-                    <h2>Message</h2>
-                    <DebounceInput
-                        type="text"
-                        value={ messageText }
-                        onChange={ (event) => setMessageText(event.target.value) }
-                        debounceTimeout={ 1000 }
-                    />
-                    <br />
-                    <button onClick={ () => setMessageText('') }>Clear</button>
-                    <br />
-                    <button onClick={ () => setMessageText('Be right back!') }>"BRB"</button>
-                    <br />
-                    <button onClick={ () => setMessageText('Petting the dog') }>"Petting dog"</button>
-                </div>
-                <div>
-                    <h2>Sounds</h2>
-                    <div>
-                        Volume
-                        <br />
-                        <DebounceInput value="0.5" min="0" max="1" step="0.01" type="range" onChange={ (event) => send({ action: 'soundsVolume', values: [ parseFloat(event.target.value) ] }) } />
-                    </div>
-                    <br />
-                    <button onClick={ () => send({ action: 'soundsMute' }) }>Mute</button>
-                    <button onClick={ () => send({ action: 'soundsUnmute' }) }>Unmute</button>
-                </div>
+            <div className="connexion">
+                <DebounceInput
+                    type="text"
+                    value={ port }
+                    onChange={ (event) => setPort(parseFloat(event.target.value)) }
+                    debounceTimeout={ 500 }
+                />
+                {/* <br /> */}
+                status: { error ? 'error' : (connected ? 'connected' : 'not connected') }
             </div>
+            { connected &&
+                <div className="card">
+                    <h2>Main actions</h2>
+                    <button onClick={ () => send({ action: 'killAll' }) }>Kill all</button>
+                    <button onClick={ () => send({ action: 'resurrectAll' }) }>Resurrect all</button>
+                    <button onClick={ () => send({ action: 'healAll' }) }>Heal all</button>
+                    <button onClick={ () => send({ action: 'hitAll' }) }>Hit all</button>
+                    <button onClick={ () => send({ action: 'relocateAll' }) }>Relocate all</button>
+                    <button onClick={ () => send({ action: 'reload' }) }>Reload</button>
+                    <h2>Tweaks</h2>
+                    <div>
+                        View angle
+                        <br />
+                        <DebounceInput
+                            value="1.35"
+                            min="0"
+                            max={ Math.PI * 0.5 }
+                            step="0.01"
+                            type="range"
+                            onChange={ (event) => send({ action: 'viewAngle', values: [ parseFloat(event.target.value) ] }) }
+                        />
+                    </div>
+                    <div>
+                        Canvas opacity
+                        <br />
+                        <DebounceInput
+                            value="1"
+                            min="0"
+                            max="1"
+                            step="0.01"
+                            type="range"
+                            onChange={ (event) => send({ action: 'canvasOpacity', values: [ parseFloat(event.target.value) ] }) }
+                        />
+                    </div>
+                    <div>
+                        <h2>Logs</h2>
+                        <button onClick={ () => send({ action: 'logsClear' }) }>Clear</button>
+                        <br />
+                        <label>
+                            <input
+                                type="checkbox"
+                                checked={ logsCategories.includes('lifeCourse') }
+                                onChange={ () => logsCategoriesToggle('lifeCourse') }
+                            />
+                            lifeCourse
+                        </label>
+                        <label>
+                            <input
+                                type="checkbox"
+                                checked={ logsCategories.includes('arcaneSpell') }
+                                onChange={ () => logsCategoriesToggle('arcaneSpell') }
+                            />
+                            arcaneSpell
+                        </label>
+                        <label>
+                            <input
+                                type="checkbox"
+                                checked={ logsCategories.includes('divineSpell') }
+                                onChange={ () => logsCategoriesToggle('divineSpell') }
+                            />
+                            divineSpell
+                        </label>
+                        <label>
+                            <input
+                                type="checkbox"
+                                checked={ logsCategories.includes('defaultSpell') }
+                                onChange={ () => logsCategoriesToggle('defaultSpell') }
+                            />
+                            defaultSpell
+                        </label>
+                        <label>
+                            <input
+                                type="checkbox"
+                                checked={ logsCategories.includes('action') }
+                                onChange={ () => logsCategoriesToggle('action') }
+                            />
+                            action
+                        </label>
+                        <label>
+                            <input
+                                type="checkbox"
+                                checked={ logsCategories.includes('') }
+                                onChange={ () => logsCategoriesToggle('') }
+                            />
+                            none
+                        </label>
+                    </div>
+                    <div>
+                        <h2>Message</h2>
+                        <DebounceInput
+                            type="text"
+                            value={ messageText }
+                            onChange={ (event) => setMessageText(event.target.value) }
+                            debounceTimeout={ 1000 }
+                        />
+                        <br />
+                        <button onClick={ () => setMessageText('') }>Clear</button>
+                        <br />
+                        <button onClick={ () => setMessageText('Be right back!') }>"BRB"</button>
+                        <br />
+                        <button onClick={ () => setMessageText('Petting the dog') }>"Petting dog"</button>
+                    </div>
+                    <div>
+                        <h2>Sounds</h2>
+                        <div>
+                            Volume
+                            <br />
+                            <DebounceInput
+                                value="0.5"
+                                min="0"
+                                max="1"
+                                step="0.01"
+                                type="range"
+                                onChange={ (event) => send({ action: 'soundsVolume', values: [ parseFloat(event.target.value) ] }) }
+                            />
+                        </div>
+                        <br />
+                        <button onClick={ () => send({ action: 'soundsMute' }) }>Mute</button>
+                        <button onClick={ () => send({ action: 'soundsUnmute' }) }>Unmute</button>
+                    </div>
+                    <div>
+                        <h2>Screen</h2>
+                        <button onClick={ () => send({ action: 'screenHide' }) }>Hide</button>
+                        <button onClick={ () => send({ action: 'screenShow' }) }>Show</button>
+                    </div>
+                    <div>
+                        <h2>Camera</h2>
+                        <button onClick={ () => send({ action: 'cameraHide' }) }>Hide</button>
+                        <button onClick={ () => send({ action: 'cameraShow' }) }>Show</button>
+                    </div>
+                </div>
+            }
+            
         </>
     )
 }
