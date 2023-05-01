@@ -6,7 +6,7 @@ function App()
 {
     const { connected, send } = useSocket()
     const [ logsCategories, setLogsCategories ] = useState([ 'lifeCourse', 'arcaneSpell', 'divineSpell', 'defaultSpell', 'action', '', ])
-    const [ message, setMessage ] = useState('')
+    const [ messageText, setMessageText ] = useState('')
 
     const logsCategoriesToggle = (category) =>
     {
@@ -32,8 +32,8 @@ function App()
         if(!connected)
             return
 
-        console.log(message)
-    }, [ message ])
+        send({ action: 'messageText', values: [ messageText ] })
+    }, [ messageText ])
 
     if(!connected)
         return <h1>Chat Arena - Remote</h1>
@@ -117,16 +117,27 @@ function App()
                     <h2>Message</h2>
                     <DebounceInput
                         type="text"
-                        value={ message }
-                        onChange={ (event) => setMessage(event.target.value) }
-                        debounceTimeout={ 500 }
+                        value={ messageText }
+                        onChange={ (event) => setMessageText(event.target.value) }
+                        debounceTimeout={ 1000 }
                     />
                     <br />
-                    <button onClick={ () => setMessage('') }>Clear</button>
+                    <button onClick={ () => setMessageText('') }>Clear</button>
                     <br />
-                    <button onClick={ () => setMessage('Be right back!') }>"BRB"</button>
+                    <button onClick={ () => setMessageText('Be right back!') }>"BRB"</button>
                     <br />
-                    <button onClick={ () => setMessage('Petting the dog') }>"Petting dog"</button>
+                    <button onClick={ () => setMessageText('Petting the dog') }>"Petting dog"</button>
+                </div>
+                <div>
+                    <h2>Sounds</h2>
+                    <div>
+                        Volume
+                        <br />
+                        <DebounceInput value="0.5" min="0" max="1" step="0.01" type="range" onChange={ (event) => send({ action: 'soundsVolume', values: [ parseFloat(event.target.value) ] }) } />
+                    </div>
+                    <br />
+                    <button onClick={ () => send({ action: 'soundsMute' }) }>Mute</button>
+                    <button onClick={ () => send({ action: 'soundsUnmute' }) }>Unmute</button>
                 </div>
             </div>
         </>
