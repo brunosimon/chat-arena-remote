@@ -1,6 +1,8 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 
-export function useSocket(port)
+const env = import.meta.env
+
+export function useSocket()
 {
     const [ status, setStatus ] = useState('notConnected')
     const [ ws, setWs ] = useState(null)
@@ -8,8 +10,8 @@ export function useSocket(port)
     useEffect(() =>
     {
         setStatus('notConnected')
-        setWs(new WebSocket('wss://192.168.1.33:' + port, 'vite-hmr'))
-    }, [ port ])
+        setWs(new WebSocket(env.VITE_SOCKET, 'vite-hmr'))
+    }, [])
 
     useEffect(() =>
     {

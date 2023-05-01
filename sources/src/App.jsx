@@ -5,8 +5,7 @@ import './App.styl'
 
 function App()
 {
-    const [ port, setPort ] = useState(2011)
-    const { status, send } = useSocket(port)
+    const { status, send } = useSocket()
     const [ logsCategories, setLogsCategories ] = useState([ 'lifeCourse', 'arcaneSpell', 'divineSpell', 'defaultSpell', 'action', '', ])
     const [ messageText, setMessageText ] = useState('')
 
@@ -43,13 +42,6 @@ function App()
                 <div className="title">Chat Arena - 🎮</div>
                 <div className="connexion">
                     <span className={ `status is-${status}` }>{ status } </span>
-                    <DebounceInput
-                        type="text"
-                        value={ port }
-                        onChange={ (event) => setPort(parseFloat(event.target.value)) }
-                        debounceTimeout={ 500 }
-                        className="inputPort"
-                    />
                 </div>
             </header>
             { status === 'connected' &&
