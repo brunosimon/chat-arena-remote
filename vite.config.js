@@ -17,9 +17,10 @@ export default ({ mode }) =>
         ],
         server:
         {
-            port: process.env.VITE_PORT,
+            port: mode === 'live' ? 2012 : 2014,
             https: true,
             host: true,
+            hmr: mode === 'development',
         },
         build:
         {

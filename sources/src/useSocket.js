@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react'
 
 const env = import.meta.env
+const mode = env.MODE
+const port = mode === 'live' ? 2011 : 2013
 
 export function useSocket()
 {
@@ -10,7 +12,7 @@ export function useSocket()
     useEffect(() =>
     {
         setStatus('notConnected')
-        setWs(new WebSocket(env.VITE_SOCKET, 'vite-hmr'))
+        setWs(new WebSocket(`wss://${ env.VITE_DISTANT_ADDRESS }:${ port }`, 'vite-hmr'))
     }, [])
 
     useEffect(() =>

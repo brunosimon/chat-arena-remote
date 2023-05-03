@@ -3,6 +3,9 @@ import { useSocket } from './useSocket.js'
 import { DebounceInput } from 'react-debounce-input'
 import './App.styl'
 
+const env = import.meta.env
+const mode = env.MODE
+
 function App()
 {
     const { status, send } = useSocket()
@@ -41,7 +44,7 @@ function App()
             <header>
                 <div className="title">Chat Arena - 🎮</div>
                 <div className="connexion">
-                    <span className={ `status is-${status}` }>{ status } </span>
+                    <span className="mode">{ mode }</span> - <span className={ `status is-${status}` }>{ status } </span>
                 </div>
             </header>
             { status === 'connected' &&
@@ -66,7 +69,7 @@ function App()
                         </div>
                     </section>
                     <section>
-                        <div className="section-title">Main actions</div>
+                        <div className="section-title">Actions</div>
                         <div className="section-content">
                             <button onClick={ () => send({ action: 'killAll' }) }>Kill all</button>
                             <button onClick={ () => send({ action: 'resurrectAll' }) }>Resurrect all</button>
@@ -74,6 +77,13 @@ function App()
                             <button onClick={ () => send({ action: 'hitAll' }) }>Hit all</button>
                             <button onClick={ () => send({ action: 'relocateAll' }) }>Relocate all</button>
                             <button onClick={ () => send({ action: 'reload' }) }>Reload</button>
+                        </div>
+                    </section>
+                    <section>
+                        <div className="section-title">Spells</div>
+                        <div className="section-content">
+                            <button onClick={ () => send({ action: 'spellsActivate' }) }>Activate</button>
+                            <button onClick={ () => send({ action: 'spellsDeactivate' }) }>Deactivate</button>
                         </div>
                     </section>
                     <section>
