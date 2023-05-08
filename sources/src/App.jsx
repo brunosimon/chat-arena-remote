@@ -59,13 +59,34 @@ function App()
                     <section>
                         <div className="section-title">Camera</div>
                         <div className="section-content">
+                            <table>
+                                <tr>
+                                    <td><button onClick={ () => send({ action: 'cameraPosition', values: [ 'top-left' ] }) }>↖</button></td>
+                                    <td><button onClick={ () => send({ action: 'cameraPosition', values: [ 'top-center' ] }) }>↑</button></td>
+                                    <td><button onClick={ () => send({ action: 'cameraPosition', values: [ 'top-right' ] }) }>↗</button></td>
+                                </tr>
+                                <tr>
+                                    <td><button onClick={ () => send({ action: 'cameraPosition', values: [ 'center-left' ] }) }>←</button></td>
+                                    <td><button onClick={ () => send({ action: 'cameraPosition', values: [ 'center-center' ] }) }>↔</button></td>
+                                    <td><button onClick={ () => send({ action: 'cameraPosition', values: [ 'center-right' ] }) }>→</button></td>
+                                </tr>
+                                <tr>
+                                    <td><button onClick={ () => send({ action: 'cameraPosition', values: [ 'near-bottom-left' ] }) }>↙</button></td>
+                                    <td><button onClick={ () => send({ action: 'cameraPosition', values: [ 'near-bottom-center' ] }) }>↓</button></td>
+                                    <td><button onClick={ () => send({ action: 'cameraPosition', values: [ 'near-bottom-right' ] }) }>↘</button></td>
+                                </tr>
+                                <tr>
+                                    <td><button onClick={ () => send({ action: 'cameraPosition', values: [ 'bottom-left' ] }) }>↙</button></td>
+                                    <td><button onClick={ () => send({ action: 'cameraPosition', values: [ 'bottom-center' ] }) }>↓</button></td>
+                                    <td><button onClick={ () => send({ action: 'cameraPosition', values: [ 'bottom-right' ] }) }>↘</button></td>
+                                </tr>
+                            </table>
+                            <button onClick={ () => send({ action: 'cameraSize', values: [ 'small' ] }) }>Small</button>
+                            <button onClick={ () => send({ action: 'cameraSize', values: [ 'medium' ] }) }>Medium</button>
+                            <button onClick={ () => send({ action: 'cameraSize', values: [ 'large' ] }) }>Large</button>
+                            <br />
                             <button onClick={ () => send({ action: 'cameraHide' }) }>Hide</button>
                             <button onClick={ () => send({ action: 'cameraShow' }) }>Show</button>
-                            <br />
-                            <button onClick={ () => send({ action: 'cameraPosition', values: [ 'left', ] }) }>left</button>
-                            <button onClick={ () => send({ action: 'cameraPosition', values: [ 'center', ] }) }>center</button>
-                            <button onClick={ () => send({ action: 'cameraPosition', values: [ 'top-right', ] }) }>top-right</button>
-                            <button onClick={ () => send({ action: 'cameraPosition', values: [ 'bottom-right', ] }) }>bottom-right</button>
                         </div>
                     </section>
                     <section>
