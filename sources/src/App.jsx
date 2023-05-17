@@ -197,6 +197,15 @@ function App()
                         </div>
                     </section>
                     <section>
+                        <div className="section-title">Modals</div>
+                        <div className="section-content">
+                            <button onClick={ () => send({ action: 'modalsHide' }) }>Hide</button>
+                            <button onClick={ () => send({ action: 'modalsShow', values: [ 'rules' ] }) }>Rules</button>
+                            <button onClick={ () => send({ action: 'modalsShow', values: [ 'spells' ] }) }>Spells</button>
+                            <button onClick={ () => send({ action: 'modalsShow', values: [ 'leaderboards' ] }) }>Leaderboards</button>
+                        </div>
+                    </section>
+                    <section>
                         <div className="section-title">Message</div>
                         <div className="section-content">
                             <DebounceInput
