@@ -4,7 +4,7 @@ const env = import.meta.env
 const mode = env.MODE
 const port = mode === 'live' ? 2011 : 2013
 
-export function useSocket()
+export function useSocket({ onMessage = null } = {})
 {
     const [ status, setStatus ] = useState('notConnected')
     const [ ws, setWs ] = useState(null)
@@ -30,6 +30,15 @@ export function useSocket()
             setStatus('error')
         }
 
+        const message = (message) =>
+        {
+            if(typeof onMessage === 'function')
+            {
+                const data = JSON.parse(message.data)
+                onMessage(data)
+            }
+        }
+
         const close = () =>
         {
             setStatus('notConnected')
@@ -37,6 +46,7 @@ export function useSocket()
 
         ws.addEventListener('open', open)
         ws.addEventListener('error', error)
+        ws.addEventListener('message', message)
         ws.addEventListener('close', close)
 
         return () =>
@@ -44,6 +54,7 @@ export function useSocket()
             ws.close()
             ws.removeEventListener('open', open)
             ws.removeEventListener('error', error)
+            ws.removeEventListener('message', message)
             ws.removeEventListener('close', close)
         }
     }, [ ws ])
